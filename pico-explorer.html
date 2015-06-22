@@ -64,6 +64,10 @@
 					width:10%;
 				}
 
+				.even{
+					background: #BBD2E1;
+				}
+
 		</style>
 
 
@@ -71,7 +75,9 @@
 			<core-selector>
 				<section id="files">
 					<template repeat="{{f, i in files}}">   <!--lorsqu il rencontre un elt dans rep-->
-						<paper-item raised on-tap="{{actionOpenFile}}"  file-id="{{i}}" relative layout horizontal center><span style="color: #3680F9"></span>{{f.path}}</paper-item>
+						<!-- <template if={{vd}}> -->
+							<paper-item class="{{i%2===0? 'even':'odd'}}"raised on-tap="{{actionOpenFile}}"  file-id="{{i}}"><core-icon style="color: #3680F9" icon="{{f.icon}}"></core-icon> {{f.path}}</paper-item>
+						<!-- </template> -->
 					</template>
 				</section>
 			</core-selector>
@@ -82,16 +88,17 @@
 		Polymer({
 			ready: function(){
 
+				this.icon;
 				var that = this;
 				this.explorer = null;
 				this.status = '...';
 				this.files = [];
+				this.vd = false;
+				this.img = false;
 				// this.directory = false;
 
 				//connexion
-
 			},
-
 
 			selectorChanged: function(){
 				if (this.selector){
@@ -99,23 +106,19 @@
 
 				}
 
-
 				var that = this;
 				var path ='.';
 				that.actionListFiles(path);
-				//d1(/.*/).listFiles();
-
-
 			},
 
 
-			actionListFiles: function(file){	//<<path sera name
+			actionListFiles: function(file){
 				var that = this;
 				if (this.explorer === 0){
-						//console.log("error connexion");
+
 				}
 				else{
-					d1(that.selector).listFiles(file, function(peerId, err, filerec){	//<<file sera name
+					d1(that.selector).listFiles(file, function(peerId, err, filerec){
 						while(that.files.length) that.files.pop(); //tant qu'il y a des elts dans le tableau
 
 							/*
@@ -128,13 +131,35 @@
 							that.files.push(filerec.files[i]);
 						};
 						var files = that.files;
-						that.status = 'got it';
+
+						////////
+						for(var i=0; i< filerec.files.length; i++){
+							var extension = that.files[i].path.split(".").pop();
+							extension = extension.toLowerCase();
+
+							switch (extension){
+								case "img":
+								case "jpg":
+								case "png":
+								case "jpeg":
+										filerec.files[i].icon = "perm-media";
+										break;
+								case "mp4":
+								case "avi":
+								case "mov":
+										filerec.files[i].icon = "group-work";
+								    	break;
+								default: files[i].icon = "file-download"; break;
+							}
+						};
+						var files = that.files;
+						////////
+
 						console.log(files);
 
 					});
 				}
 			},
-
 
 			actionOpenFile: function(evt){
 
@@ -161,9 +186,6 @@
 					});
 				}
 
-
-
-
 				else if (type === 'directory'){	//si doc
 					// directory = true;
 
@@ -182,44 +204,8 @@
 					// 			console.log(files);
 					// 	});
 					// })
-				}
-
-				// else if(this.files[index].type === 'directory'){
-				// 	var directory = this.files[index].path;
-				// 	var that = this;
-				// 	d1(/.*/).listFiles(function(peerId, err, filerec){
-				// 		while(that.directory.length) that.directory.pop(); //tant qu'il y a des elts dans le tableau
-				//
-				//
-				//
-				// 		for (var i=0; i< filerec.directory.length; i++){
-				// 			console.log(filerec.directory[i].path);
-				// 			that.files.push(filerec.directory[i]);
-				// 		};
-				// 		var files = that.directory;
-				// 		that.status = 'got it';
-				// 		that.files = that.files;console.log(that.files);
-				//
-				// 	});
-				//
-				// }
-
+				};
 			},
-
-
-			// OrderOpen : function(){
-			// 	d1(that.selector).OrderOpen(request, function(peerId, err, data){
-			// 		console.log(data);
-			// 	});
-			// },
-			//
-			// ListViewers: function(){
-			// 	d1(that.selector).ListViewers(subscription, function(peerId, err, data){
-			// 		console.log(subscription);
-			// 	})
-			// }
-
-
 
 
 		});
