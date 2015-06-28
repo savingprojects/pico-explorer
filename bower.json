@@ -14,6 +14,5 @@
     "paper-button": "Polymer/paper-button#^0.5",
     "diya-sdk": "partnering/diya-sdk",
     "paper-item": "Polymer/paper-item#^0.5",
-    "pico-explorer":"bower_components/pico-explorer"
   }
 }
