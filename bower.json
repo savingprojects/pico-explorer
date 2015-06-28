@@ -13,6 +13,6 @@
     "polymer": "Polymer/polymer#^0.5",
     "paper-button": "Polymer/paper-button#^0.5",
     "diya-sdk": "partnering/diya-sdk",
-    "paper-item": "Polymer/paper-item#^0.5",
+    "paper-item": "Polymer/paper-item#^0.5"
   }
 }
