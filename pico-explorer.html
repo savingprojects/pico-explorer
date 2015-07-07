@@ -72,6 +72,13 @@
 					background: #BBD2E1;
 				}
 
+				#stop{
+					color: #3680F9;
+					display: flex;
+					justify-content: space-between;
+					align-items: center;
+				}
+
 		</style>
 
 
@@ -85,6 +92,9 @@
 					</template>
 				</section>
 			</core-selector>
+			<div id="stop">
+				<paper-button  on-tap="{{stop}}">stop video</paper-button>
+			</div>
 		</div>
 </template>
 <script>
@@ -211,6 +221,18 @@
 				};
 			},
 
+			stop: function(){
+				var that = this;
+				var imageDemo = "imageDemo.png";
+				var type = 'file';
+
+				d1(that.selector).openFile(imageDemo, type,  function(peerId, err, data){
+					console.log("Stop video" );
+					console.log(peerId);
+					console.log(err);
+					console.log(data);
+				});
+			}
 
 		});
 	</script>
