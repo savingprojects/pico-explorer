@@ -1,13 +1,11 @@
-<!-- <script type="text/javascript" src="bower_components/diya-sdk-ng/dist/diya-sdk.js"></script> -->
-<link rel="import" href="../paper-button/paper-button.html">
+<html><head><link rel="import" href="../paper-button/paper-button.html">
 <link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../core-icons/core-icons.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
 <link rel="import" href="../paper-item/paper-item.html">
-<link rel="import" href="../core-selector/core-selector.html">
+<link rel="import" href="../iron-selector/iron-selector.html">
 
-<polymer-element name="pico-explorer" attributes="selector">
-	<template>
-		<style>
+<dom-module id="pico-explorer">
+  <style>
 			:host{
 				display: flex;
 				flex-direction: column;
@@ -73,145 +71,135 @@
 				}
 
 		</style>
+  <template>
 
 
 		<div id="listfiles">
-			<core-selector>
+			<iron-selector>
 				<section id="files">
-					<template repeat="{{f, i in files}}">   <!--lorsqu il rencontre un elt dans rep-->
-						<!-- <template if={{vd}}> -->
-							<paper-item class="{{i%2===0? 'even':'odd'}}"raised on-tap="{{actionOpenFile}}"  file-id="{{i}}"><core-icon style="color: #3680F9" icon="{{f.icon}}"></core-icon> {{f.path}}</paper-item>
-						<!-- </template> -->
+					<template is="dom-repeat" items="{{files}}" as="f" index-as="i">   <!--lorsqu il rencontre un elt dans rep-->
+						<paper-item raised="" on-tap="actionOpenFile" file-id="{{i}}" class$="{{_computeClass(i)}}"><iron-icon style="color: #3680F9" icon="{{f.icon}}"></iron-icon> <span>{{f.path}}</span></paper-item>
 					</template>
 				</section>
-			</core-selector>
+			</iron-selector>
 		</div>
 </template>
-<script>
-
-		Polymer({
-			ready: function(){
-
-				// this.icon;
-				var that = this;
-				this.explorer = null;
-				this.files = [];
-				// this.status = '...';
-				// this.vd = false;
-				// this.img = false;
-				// this.directory = false;
-
-				//connexion
-			},
-
-			selectorChanged: function(){
-				if (this.selector){
-
-
-				}
-
-				var that = this;
-				var path ='.';
-				that.actionListFiles(path);
-			},
-
-
-			actionListFiles: function(file){
-				var that = this;
-				if (this.explorer === 0){
-
-				}
-				else{
-					d1(that.selector).listFiles(file, function(peerId, err, filerec){
-						while(that.files.length) that.files.pop(); //tant qu'il y a des elts dans le tableau
-
-							/*
-							files.forEach(function(f){
-								that.files.push(f);
-							});
-							***********************/
-						for (var i=0; i< filerec.files.length; i++){	//files = Object
-							console.log(filerec.files[i].path);
-							that.files.push(filerec.files[i]);
-						};
-						var files = that.files;
-
-						////////
-						for(var i=0; i< filerec.files.length; i++){
-							var extension = that.files[i].path.split(".").pop();
-							extension = extension.toLowerCase();
-
-							switch (extension){
-								case "img":
-								case "jpg":
-								case "png":
-								case "jpeg":
-										filerec.files[i].icon = "perm-media";
-										break;
-								case "mp4":
-								case "avi":
-								case "mov":
-										filerec.files[i].icon = "group-work";
-								    	break;
-								default: files[i].icon = "file-download"; break;
-							}
-						};
-						var files = that.files;
-						////////
-
-						console.log(files);
-
-					});
-				}
-			},
-
-			actionOpenFile: function(evt){
-
-				var that = this;
-				if (that.explorer === 0){
-					throw(err);
-				}
-
-				var index = parseInt(evt.target.attributes['file-id'].value);
-
-				var file = this.files[index].path;
-				var type = this.files[index].type;
-
-				console.log(file);
-				console.log(type);
-
-
-				if (type === 'file'){
-					// var fichier = this.files[index].path;
-					// var type = this.files[index].type;
-					// directory = false;
-					d1(that.selector).openFile(file, type,  function(peerId, err, data){
-						console.log("open");
-					});
-				}
-
-				else if (type === 'directory'){	//si doc
-					// directory = true;
-
-					// d1(that.selector).openFile(file, type, function(peerId, err, data){
-					// 	d1(that.selector).listFiles(file, function(peerId, err, filerec){	//listing dans le doc choisi
-					//
-					// 		console.log('filerec: ');
-					// 		console.log(filerec);
-					//
-					// 		for (var i=0; i< filerec.files.length; i++){
-					// 			console.log(filerec.files[i].path);
-					// 			that.files.push(filerec.files[i]);
-					// 		};
-					// 		var files = that.files;
-					// 		that.status = 'got it';
-					// 			console.log(files);
-					// 	});
-					// })
-				};
-			},
-
-
-		});
-	</script>
-</polymer-element>
+  <script>
+    Polymer({
+      is: 'pico-explorer',
+      properties: {
+        selector: {
+          notify: true,
+          observer: 'selectorChanged'
+        }
+      },
+      ready: function () {
+        // this.icon;
+        var that = this;
+        this.explorer = null;
+        this.files = [];
+      },
+      // this.status = '...';
+      // this.vd = false;
+      // this.img = false;
+      // this.directory = false;
+      //connexion
+      selectorChanged: function () {
+        if (this.selector) {
+        }
+        var that = this;
+        var path = '.';
+        that.actionListFiles(path);
+      },
+      actionListFiles: function (file) {
+        var that = this;
+        if (this.explorer === 0) {
+        } else {
+          d1(that.selector).listFiles(file, function (peerId, err, filerec) {
+            while (that.files.length)
+              that.pop('files');
+            //tant qu'il y a des elts dans le tableau
+            /*
+            	files.forEach(function(f){
+            		that.files.push(f);
+            	});
+            	***********************/
+            for (var i = 0; i < filerec.files.length; i++) {
+              //files = Object
+              console.log(filerec.files[i].path);
+              that.push('files', filerec.files[i]));
+            }
+            ;
+            var files = that.files;
+            ////////
+            for (var i = 0; i < filerec.files.length; i++) {
+              var extension = that.files[i].path.split('.').pop();
+              extension = extension.toLowerCase();
+              switch (extension) {
+              case 'img':
+              case 'jpg':
+              case 'png':
+              case 'jpeg':
+                this.set('files.'+i+'.icon', 'perm-media');
+                break;
+              case 'mp4':
+              case 'avi':
+              case 'mov':
+                this.set('files.'+i+'.icon', 'group-work');
+                break;
+              default:
+                this.set('files.'+i+'.icon', 'file-download');
+                break;
+              }
+            }
+            ;
+            var files = that.files;
+            ////////
+            console.log(files);
+          });
+        }
+      },
+      actionOpenFile: function (evt) {
+        var that = this;
+        if (that.explorer === 0) {
+          throw err;
+        }
+        var index = parseInt(evt.target.attributes['file-id'].value);
+        var file = this.files[index].path;
+        var type = this.files[index].type;
+        console.log(file);
+        console.log(type);
+        if (type === 'file') {
+          // var fichier = this.files[index].path;
+          // var type = this.files[index].type;
+          // directory = false;
+          d1(that.selector).openFile(file, type, function (peerId, err, data) {
+            console.log('open');
+          });
+        } else if (type === 'directory') {
+        }
+        //si doc
+        // directory = true;
+        // d1(that.selector).openFile(file, type, function(peerId, err, data){
+        // 	d1(that.selector).listFiles(file, function(peerId, err, filerec){	//listing dans le doc choisi
+        //
+        // 		console.log('filerec: ');
+        // 		console.log(filerec);
+        //
+        // 		for (var i=0; i< filerec.files.length; i++){
+        // 			console.log(filerec.files[i].path);
+        // 			that.files.push(filerec.files[i]);
+        // 		};
+        // 		var files = that.files;
+        // 		that.status = 'got it';
+        // 			console.log(files);
+        // 	});
+        // })
+        ;
+      },
+      _computeClass: function (i) {
+        return i % 2 === 0 ? 'even' : 'odd';
+      }
+    });
+  </script>
+</dom-module>
