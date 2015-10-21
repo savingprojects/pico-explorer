@@ -140,15 +140,15 @@
               case 'jpg':
               case 'png':
               case 'jpeg':
-                this.set('files.'+i+'.icon', 'perm-media');
+                that.set('files.'+i+'.icon', 'perm-media');
                 break;
               case 'mp4':
               case 'avi':
               case 'mov':
-                this.set('files.'+i+'.icon', 'group-work');
+                that.set('files.'+i+'.icon', 'group-work');
                 break;
               default:
-                this.set('files.'+i+'.icon', 'file-download');
+                that.set('files.'+i+'.icon', 'file-download');
                 break;
               }
             }
@@ -164,7 +164,8 @@
         if (that.explorer === 0) {
           throw err;
         }
-        var index = parseInt(evt.target.attributes['file-id'].value);
+	console.log(evt);
+        var index = parseInt(evt.model.i);
         var file = this.files[index].path;
         var type = this.files[index].type;
         console.log(file);
